@@ -1,0 +1,55 @@
+body {
+    background-color: #56baed;
+    min-height: 100vh;
+    padding-top: 3.25rem;
+}
+
+.section {
+    padding: 1rem 1.5rem;
+    max-width: 750px;
+    margin: auto;
+}
+
+.is-sparta {
+    color: #56baed !important;
+}
+
+.button.is-sparta {
+    background-color: #56baed;
+    border-color: transparent;
+    color: #fff !important;
+}
+
+.button.is-sparta.is-outlined {
+    background-color: transparent;
+    border-color: #56baed;
+    color: #56baed !important;
+}
+
+.modal-content {
+    width: 600px;
+    max-width: 80%;
+}
+
+input::-webkit-calendar-picker-indicator {
+    display: none;
+}
+
+.image img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+}
+article.media.post-box {
+    width: 40%;
+}
+section.section {
+    display: flex;
+    justify-content: space-between;
+}
+.has-addons{
+    border-radius: 50%;
+}
+.input, .textarea, .is-info {
+    border-radius: 20px;
+}
