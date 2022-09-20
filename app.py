@@ -16,23 +16,47 @@ client = MongoClient('mongodb+srv://test:sparta@cluster0.rfofzeu.mongodb.net/?re
 db = client.dbsparta_plus_week4
 
 
-@app.route('/')
-def home():
+@app.route('/main')
+def login():
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"username": payload["id"]})
-        return render_template('index.html', user_info=user_info)
+        return render_template('main.html', user_info=user_info)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
-@app.route('/login')
-def login():
+# @app.route('/main')
+# def main():
+#     return render_template('main2.html')
+# @app.route("/main", methods=["POST"])
+# def web_mars_post():
+#     name_receive = request.form['name_give']
+#     title_receive = request.form['title_give']
+#     date_receive = request.form['date_give']
+#     content_receive = request.form['content_give']
+#     doc = {
+#         'name':name_receive,
+#         'title':title_receive,
+#         'date':date_receive,
+#         'content':content_receive,
+#     }
+#     db.main.insert_one(doc)
+#
+#     return jsonify({'msg': '주문 완료!'})
+#
+# @app.route("/main/show", methods=["GET"])
+# def web_mars_get():
+#     order_list = list(db.main.find({}, {'_id': False}))
+#     return jsonify({'orders': order_list})
+
+@app.route('/')
+def home():
     msg = request.args.get("msg")
-    return render_template('login.html', msg=msg)
+    return render_template('index.html', msg=msg)
 
 
 @app.route('/user/<username>')
