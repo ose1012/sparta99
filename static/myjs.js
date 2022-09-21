@@ -37,12 +37,14 @@ function toggle_like(post_id, type) {
 }
 
 function post() {
+    let title = $("#title").val()
     let comment = $("#textarea-post").val()
     let today = new Date().toISOString()
     $.ajax({
         type: "POST",
         url: "/posting",
         data: {
+            title_give: title,
             comment_give: comment,
             date_give: today
         },
@@ -115,6 +117,7 @@ function get_posts(username) {
                                                     <p>
                                                         <strong>${post['profile_name']}</strong> <small>@${post['username']}</small> <small>${time_before}</small>
                                                         <br>
+                                                        <strong style="font-size: 20px">${post['title']}</strong><br>
                                                         ${post['comment']}
                                                     </p>
                                                     <div>
@@ -131,7 +134,7 @@ function get_posts(username) {
                                                 </nav>
                                             </div>
                                         </article>
-                                    </div>`
+                                    </div>`;
                     $("#post-box").append(html_temp)
                 }
             }

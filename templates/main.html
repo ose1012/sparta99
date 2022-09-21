@@ -11,8 +11,21 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
             crossorigin="anonymous"></script>
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang&display=swap" rel="stylesheet">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="{{ url_for('static', filename='myjs.js') }}"></script>
     <script src="https://kit.fontawesome.com/fa9d346fc7.js" crossorigin="anonymous"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&display=swap" rel="stylesheet">
 
     <title>나의 개발일지</title>
 
@@ -20,6 +33,12 @@
         * {
             font-family: 'Gowun Batang', serif;
 
+        }
+
+        html {
+            background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://blog.kakaocdn.net/dn/CUKz9/btqGK3bQE0P/4sDOkRXJWuXFQwjz2kM4C1/unicorn3.jpg?attach=1&knm=img.jpg');
+            background-position: center;
+            background-size: cover;
         }
 
         body {
@@ -30,24 +49,14 @@
 
         h1 {
             font-weight: bold;
+            font-size: 36px;
         }
 
         .order {
             width: 500px;
-            margin: 60px auto 0px auto;
-            padding-bottom: 60px;
+            margin: auto;
             font-weight: bold;
             justify-content: center;
-        }
-
-        .mybtn1 {
-            width: 100%;
-            font-weight: bold;
-        }
-
-        .mybtn2 {
-            width: 100%;
-            font-weight: bold;
         }
 
         .order > table {
@@ -55,15 +64,8 @@
             font-size: 18px;
         }
 
-        .wrap {
-            color: black;
-        }
-
-        .wrap1 {
-            margin: 100px 0;
-        }
-
         .mask {
+            margin: 40px;
             color: white;
         }
 
@@ -83,85 +85,56 @@
             cursor: pointer;
         }
 
+        .info {
+            margin: 20px 0px;
+        }
+
+        #btn {
+            display: inline-block;
+            background-color: #FF9800;
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            border-radius: 50px;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            transition: background-color .3s,
+            opacity .5s, visibility .5s;
+            opacity: 0;
+            visibility: hidden;
+            z-index: 1000;
+        }
+
+        #btn::after {
+            content: "\f077";
+            font-family: FontAwesome;
+            font-weight: normal;
+            font-style: normal;
+            font-size: 2em;
+            line-height: 50px;
+            color: #fff;
+        }
+
+        #btn:hover {
+            cursor: pointer;
+            background-color: #333;
+        }
+
+        #btn:active {
+            background-color: #555;
+        }
+
+        #btn.show {
+            opacity: 1;
+            visibility: visible;
+        }
     </style>
     <script>
+
         $(document).ready(function () {
-            show_order();
+            get_posts();
         });
-
-        function show_order() {
-            $('#order-box').empty()
-            $.ajax({
-                type: 'GET',
-                url: '/main/show',
-                data: {},
-                success: function (response) {
-                    let rows = response['orders']
-                    for (let i = 0; i < rows.length; i++) {
-                        let name = rows[i]['name']
-                        let title = rows[i]['title']
-                        let date = rows[i]['date']
-                        let content = rows[i]['content']
-if (response["result"] == "success") {
-                let posts = response["posts"]
-                for (let i = 0; i < posts.length; i++) {
-                    let post = posts[i]
-                    let time_post = new Date(post["date"])
-                    let time_before = time2str(time_post)
-                    let class_heart = post['heart_by_me'] ? "fa-heart" : "fa-heart-o"
-                    let count_heart = post['count_heart']
-                    let html_temp = `<div class="box" id="${post["_id"]}">
-                                        <article class="media">
-                                            <div class="media-left">
-                                                <a class="image is-64x64" href="/user/${post['username']}">
-                                                    <img class="is-rounded" src="/static/${post['profile_pic_real']}"
-                                                         alt="Image">
-                                                </a>
-                                            </div>
-                        let temp_html = `<div class="media-left">
-                                                <a class="image is-64x64" href="/user/${post['username']}">
-                                                    <img class="is-rounded" src="/static/${post['profile_pic_real']}"
-                                                         alt="Image">
-                                                </a>
-                                            </div>
-                                                <div class="row row-cols-1 row-cols-md-3 g-4">
-                                                  <div class="card-body">
-                                                    <div class="card">
-                                                      <h5 class="card-header">${name}</h5>
-                                                      <div class="card-body">
-                                                        <div class="content">
-                                                            <h5 class="card-title">${title}</h5>
-                                                            <button onclick="delete_post()" type="button" class="btn2"><i class="fa-solid fa-xmark"></i></i></button>
-                                                        </div>
-
-                                                        <p class="card-text">${content}</p>
-                                                        <button type="button" class="btn btn-outline-danger" onclick = "location.href='https://naver.com'">상세 보기!</button>
-                                                      </div>
-                                                    </div>
-                                                </div>`
-                        $('#order-box').append(temp_html)
-                    }
-
-
-                },
-            })
-        }
-
-        function save_order() {
-            let name = $('#name').val()
-            let title = $('#title').val()
-            let date = $('#date').val()
-            let content = $('#content').val()
-            $.ajax({
-                type: 'POST',
-                url: '/main',
-                data: { name_give: name, title_give: title, date_give: date, content_give: content},
-                success: function (response) {
-                    alert(response['msg'])
-                    window.location.reload()
-                }
-            })
-        }
 
         function delete_post(id) {
             if (confirm('정말로 삭제하시겠습니까?')) {
@@ -184,60 +157,117 @@ if (response["result"] == "success") {
     </script>
 </head>
 <body>
+<a id="btn"></a>
 <div class="mask">
     <div class="order">
         <h1>나의 개발 일지를 공유합니다.</h1>
-        <h3>----------------------------------------</h3>
-        <p>
+        <h3 style="font-size: 28px">----------------------------------------</h3>
+        <p class="info">
             나의 개발 일지를 손쉽게 쓰기 🧨 <br/>
             미리미리 쓰면 귀찮지 않고 오히려 재밌다!
         </p>
-
-        <div class="order-info">
-            <div class="input-group mb-3">
-                <span.userName class="input-group-text">이름</span.userName>
-                <input id="name" type="text" class="form-control">
-            </div>
-            <div class="input-group mb-3">
-                <span class="input-group-text">제목</span>
-                <input id="title" type="text" class="form-control">
-            </div>
-{#            <div class="input-group mb-3">#}
-{#                <span class="input-group-text">날짜</span>#}
-{#                <input id="date" type="text" class="form-control">#}
-{#            </div>#}
-            <div class="input-group mb-3">
-                <span class="input-group-text">개발 내용</span>
-                <textarea id="content" type="text" class="form-control"></textarea>
-            </div>
-            <button onclick="save_order()" type="button" class="btn btn-info mybtn1">개발 일지 작성하기</button>
-        </div>
     </div>
-</div>
-
-<div class="wrap">
-    <div id="order-box" class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-            <div class="card h-100">
-                <div class="card-body">
-                    <div class="card">
-                        <h5 class="card-header">${name}</h5>
-                        <div class="card-body">
-                            <h5 class="card-title">제목</h5>
-                            <p class="card-text">오늘은 웹개발 플러스에서 jinja2로 뜻 가져오기를 했다. </p>
-                            <button type="button" class="btn btn-danger btn-block"
-                                    onclick="location.href='https://naver.com'">상세 보기!
-                            </button>
-                        </div>
-                    </div>
-
+    <section class="section">
+        <article class="media post-box">
+            <figure class="media-left" style="align-self: center">
+                <a class="image is-32x32" href="/user/{{ user_info.username }}">
+                    <img class="is-rounded" src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
+                </a>
+            </figure>
+            <div class="media-content">
+                <div class="field">
+                    <p class="control">
+                        <input id="input-post" class="input is-rounded" placeholder="오늘의 개발 일지는?"
+                               onclick='$("#modal-post").addClass("is-active")'></p>
                 </div>
             </div>
+        </article>
+        <div class="modal" id="modal-post">
+            <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
+            <div class="modal-content">
+                <div class="box">
+                    <article class="media">
+                        <div class="media-content">
+                            <div class="field">
+                                <p class="control">
+                                    <input class="input" type="text" placeholder="제목" id="title">
+                                    <textarea id="textarea-post" class="textarea"
+                                              placeholder="오늘의 개발 일지는?"></textarea>
+                                </p>
+                            </div>
+                            <nav class="level is-mobile">
+                                <div class="level-left">
+
+                                </div>
+                                <div class="level-right">
+                                    <div class="level-item">
+                                        <a class="button is-sparta" onclick="post()">포스팅하기</a>
+                                    </div>
+                                    <div class="level-item">
+                                        <a class="button is-sparta is-outlined"
+                                           onclick='$("#modal-post").removeClass("is-active")'>취소</a>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </article>
+                </div>
+            </div>
+            <button class="modal-close is-large" aria-label="close"
+                    onclick='$("#modal-post").removeClass("is-active")'></button>
         </div>
+    </section>
+    <section class="section">
+        <div id="post-box" class="container">
+            <div class="box">
+                <article class="media">
+                    <div class="media-left">
+                        <a class="image is-64x64" href="#">
+                            <img class="is-rounded"
+                                 src={{ url_for("static", filename="profile_pics/profile_placeholder.png") }} alt="Image">
+                        </a>
+                    </div>
+                    <div class="media-content">
+                        <div class="content">
+                            <p>
+                                <strong>홍길동</strong> <small>@username</small> <small>10분 전</small>
+                                <br>
+                                글을 적는 칸
+                            </p>
+                        </div>
+                        <nav class="level is-mobile">
+                            <div class="level-left">
+                                <a class="level-item is-sparta" aria-label="heart"
+                                   onclick="toggle_like('', 'heart')">
+                                <span class="icon is-small"><i class="fa fa-heart"
+                                                               aria-hidden="true"></i></span>&nbsp;<span
+                                        class="like-num">2.7k</span>
+                                </a>
+                            </div>
 
+                        </nav>
+                    </div>
+                </article>
+            </div>
 
-    </div>
+        </div>
+    </section>
 </div>
+<script>
+    var btn = $('#btn');
 
+    $(window).scroll(function () {
+        if ($(window).scrollTop() > 300) {
+            btn.addClass('show');
+        } else {
+            btn.removeClass('show');
+        }
+    });
+
+    btn.on('click', function (e) {
+        e.preventDefault();
+        $('html, body').animate({scrollTop: 0}, '300');
+    });
+</script>
 </body>
 </html>

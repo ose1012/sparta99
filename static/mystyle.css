@@ -1,9 +1,12 @@
 * {
-    font-family: 'Cairo', sans-serif;
+    font-family: 'Gowun Batang', serif;
+
 }
-body {
-    background-color: #56baed;
-    min-height: 100vh;
+
+html {
+    background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://blog.kakaocdn.net/dn/CUKz9/btqGK3bQE0P/4sDOkRXJWuXFQwjz2kM4C1/unicorn3.jpg?attach=1&knm=img.jpg');
+    background-position: center;
+    background-size: cover;
 }
 
 .section {

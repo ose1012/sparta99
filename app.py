@@ -89,7 +89,7 @@ def sign_in():
             'id': username_receive,
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256') \
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
             # .decode('utf-8')
         return jsonify({'result': 'success', 'msg': username_receive + '님 환영합니다!', 'token': token})
     # 찾지 못하면
@@ -154,9 +154,11 @@ def posting():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"username": payload["id"]})
+        title_receive = request.form["title_give"]
         comment_receive = request.form["comment_give"]
         date_receive = request.form["date_give"]
         doc = {
+            "title": title_receive,
             "username": user_info["username"],
             "profile_name": user_info["profile_name"],
             "profile_pic_real": user_info["profile_pic_real"],
@@ -277,32 +279,32 @@ def delete_bucket():
 
 
 
-@app.route("/main", methods=["POST"])
-def web_mars_post():
-    name_receive = request.form['name_give']
-    # name1_receive = request.form['name1_give']
-    title_receive = request.form['title_give']
-    date_receive = request.form['date_give']
-    content_receive = request.form['content_give']
-    post_list = list(db.posts.find({}, {'_id': False}))
-    count = len(post_list) + 1
-    doc = {
-        'id': count,
-        'name': name_receive,
-        # 'name1': name1_receive,
-        'title': title_receive,
-        'date': date_receive,
-        'content': content_receive
-    }
-    db.mars.insert_one(doc)
+# @app.route("/main", methods=["POST"])
+# def web_mars_post():
+#     name_receive = request.form['name_give']
+#     # name1_receive = request.form['name1_give']
+#     title_receive = request.form['title_give']
+#     date_receive = request.form['date_give']
+#     content_receive = request.form['content_give']
+#     post_list = list(db.posts.find({}, {'_id': False}))
+#     count = len(post_list) + 1
+#     doc = {
+#         'id': count,
+#         'name': name_receive,
+#         # 'name1': name1_receive,
+#         'title': title_receive,
+#         'date': date_receive,
+#         'content': content_receive
+#     }
+#     db.mars.insert_one(doc)
+#
+#     return jsonify({'msg': '작성 완료 ✔'})
 
-    return jsonify({'msg': '작성 완료 ✔'})
 
-
-@app.route("/main/show", methods=["GET"])
-def web_mars_get():
-    order_list = list(db.mars.find({}, {'_id': False}))
-    return jsonify({'orders': order_list})
+# @app.route("/main/show", methods=["GET"])
+# def web_mars_get():
+#     order_list = list(db.mars.find({}, {'_id': False}))
+#     return jsonify({'orders': order_list})
 
 
 if __name__ == '__main__':
