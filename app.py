@@ -5,6 +5,7 @@ import hashlib
 from flask import Flask, render_template, jsonify, request, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
+from bson.objectid import ObjectId
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
@@ -90,7 +91,7 @@ def sign_in():
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-            # .decode('utf-8')
+        # .decode('utf-8')
         return jsonify({'result': 'success', 'msg': username_receive + '님 환영합니다!', 'token': token})
     # 찾지 못하면
     else:
@@ -191,18 +192,26 @@ def get_posts():
         return redirect(url_for("home"))
 
 
+# @app.route('/get_posts/delete', methods=['POST'])
+# def delete_post():
+#     id_receive = request.form.get('id_give')
+#     print(type(id_receive))
+#     db.posts.delete_one({'id': id_receive})
+#     return jsonify({'msg': '삭제 완료'})
+
+# @app.route('/get_posts/delete', methods=['POST'])
+# def delete_post():
+#     id_receive = request.form.get("_id")
+#     db.posts.delete_one({'id': id_receive})
+#     return jsonify({'msg': '삭제 완료'})
+
+
 @app.route('/get_posts/delete', methods=['POST'])
 def delete_post():
-    id_receive = request.form.get('id_give')
-    print(type(id_receive))
-    db.posts.delete_one({'id': id_receive})
+    _id = request.form['_id']
+    print(_id)
+    db.posts.delete_one({'_id': ObjectId(_id)})
     return jsonify({'msg': '삭제 완료'})
-
-# @app.route('/user/{id}')
-# def check_users(id):
-#     existUser = db.posts
-#     return usersEntity(existUser.find({"_id": ObjectId(id)}))
-
 
 
 @app.route('/update_like', methods=['POST'])
@@ -275,8 +284,6 @@ def delete_bucket():
     print(type(num_receive))
     db.bucket.delete_one({'num': int(num_receive)})
     return jsonify({'msg': '삭제 완료'})
-
-
 
 
 # @app.route("/main", methods=["POST"])

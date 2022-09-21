@@ -27,7 +27,7 @@
     <script src="{{ url_for('static', filename='myjs.js') }}"></script>
     <script src="https://kit.fontawesome.com/fa9d346fc7.js" crossorigin="anonymous"></script>
 
-    <title>나의 개발일지</title>
+    <title>나의 개발 일지</title>
 
     <style>
         * {
@@ -136,14 +136,14 @@
             get_posts();
         });
 
-        function delete_post(id) {
+        function delete_post(_id) {
+            console.log(_id)
             if (confirm('정말로 삭제하시겠습니까?')) {
-                console.log(id);
                 $.ajax({
                     type: 'POST',
                     url: '/get_posts/delete',
                     data: {
-                        id: id,
+                        _id: _id,
                     },
                     success: function (response) {
                         alert(response['msg']);
@@ -157,6 +157,7 @@
     </script>
 </head>
 <body>
+
 <a id="btn"></a>
 <div class="mask">
     <div class="order">
