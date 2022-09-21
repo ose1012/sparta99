@@ -85,8 +85,8 @@ function num2str(count) {
 }
 
 function get_posts(username) {
-    if (username==undefined) {
-        username=""
+    if (username == undefined) {
+        username = ""
     }
     $("#post-box").empty()
     $.ajax({
@@ -117,15 +117,17 @@ function get_posts(username) {
                                                         <br>
                                                         ${post['comment']}
                                                     </p>
+                                                    <div>
+                                                        <button onclick="delete_post()" type="button" class="btn2"><i class="fa-solid fa-xmark"></i></i></button>
+                                                    </div>
                                                 </div>
                                                 <nav class="level is-mobile">
                                                     <div class="level-left">
                                                         <a class="level-item is-sparta" aria-label="heart" onclick="toggle_like('${post['_id']}', 'heart')">
-                                                            <span class="icon is-small"><i class="fa ${class_heart}"
-                                                                                           aria-hidden="true"></i></span>&nbsp;<span class="like-num">${num2str(count_heart)}</span>
+                                                            <span class="icon is-small"><i class="fa ${class_heart}" aria-hidden="true"></i></span>&nbsp;<span class="like-num">${num2str(count_heart)}</span>
                                                         </a>
                                                     </div>
-
+                                                    
                                                 </nav>
                                             </div>
                                         </article>

@@ -13,6 +13,8 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 SECRET_KEY = 'SPARTA'
 
 client = MongoClient('mongodb+srv://test:sparta@cluster0.rfofzeu.mongodb.net/?retryWrites=true&w=majority')
+# client = MongoClient('mongodb://cluster0:test@localhost', 27017)
+# client = MongoClient('mongodb://15.165.75.67', 27017, username="cluster0", password="sparta")
 db = client.dbsparta_plus_week4
 
 
@@ -87,8 +89,8 @@ def sign_in():
             'id': username_receive,
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)  # 로그인 24시간 유지
         }
-        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-        # .decode('utf-8')
+        token = jwt.encode(payload, SECRET_KEY, algorithm='HS256') \
+            # .decode('utf-8')
         return jsonify({'result': 'success', 'msg': username_receive + '님 환영합니다!', 'token': token})
     # 찾지 못하면
     else:
@@ -187,6 +189,20 @@ def get_posts():
         return redirect(url_for("home"))
 
 
+@app.route('/get_posts/delete', methods=['POST'])
+def delete_post():
+    id_receive = request.form.get('id_give')
+    print(type(id_receive))
+    db.posts.delete_one({'id': id_receive})
+    return jsonify({'msg': '삭제 완료'})
+
+# @app.route('/user/{id}')
+# def check_users(id):
+#     existUser = db.posts
+#     return usersEntity(existUser.find({"_id": ObjectId(id)}))
+
+
+
 @app.route('/update_like', methods=['POST'])
 def update_like():
     token_receive = request.cookies.get('mytoken')
@@ -257,6 +273,36 @@ def delete_bucket():
     print(type(num_receive))
     db.bucket.delete_one({'num': int(num_receive)})
     return jsonify({'msg': '삭제 완료'})
+
+
+
+
+@app.route("/main", methods=["POST"])
+def web_mars_post():
+    name_receive = request.form['name_give']
+    # name1_receive = request.form['name1_give']
+    title_receive = request.form['title_give']
+    date_receive = request.form['date_give']
+    content_receive = request.form['content_give']
+    post_list = list(db.posts.find({}, {'_id': False}))
+    count = len(post_list) + 1
+    doc = {
+        'id': count,
+        'name': name_receive,
+        # 'name1': name1_receive,
+        'title': title_receive,
+        'date': date_receive,
+        'content': content_receive
+    }
+    db.mars.insert_one(doc)
+
+    return jsonify({'msg': '작성 완료 ✔'})
+
+
+@app.route("/main/show", methods=["GET"])
+def web_mars_get():
+    order_list = list(db.mars.find({}, {'_id': False}))
+    return jsonify({'orders': order_list})
 
 
 if __name__ == '__main__':
