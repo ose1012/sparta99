@@ -19,16 +19,13 @@
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gamja+Flower&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
     <!-- JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
 
     <style>
-        * {
-            font-family: 'Gowun Batang', serif;
-
-        }
 
         html {
             background-image: linear-gradient(0deg, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://blog.kakaocdn.net/dn/CUKz9/btqGK3bQE0P/4sDOkRXJWuXFQwjz2kM4C1/unicorn3.jpg?attach=1&knm=img.jpg');
@@ -36,6 +33,26 @@
             background-size: cover;
         }
 
+        .title {
+            font-weight: 800;
+            font-size: 5rem;
+
+            font-family: 'Gamja Flower', cursive;
+            text-align: center;
+            color: #5968c9;
+            text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+        }
+
+
+
+
+        .subtitle {
+            font-size: 2rem;
+            font-family: 'Gamja Flower', cursive;
+            color: crimson;
+            text-align: center;
+            text-shadow: -1px 0 #000, 0 1px #000, 1px 0 #000, 0 -1px #000;
+        }
 
         .section {
             padding: 1rem 1.5rem;
@@ -177,6 +194,24 @@
                 transform: none;
             }
         }
+
+        .hero.has-background {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-background {
+            position: absolute;
+            object-fit: cover;
+            object-position: center center;
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-background.is-transparent {
+            opacity: 0.3;
+        }
+
 
 
     </style>
@@ -335,6 +370,19 @@
 
 </head>
 <body>
+
+
+<div class="hero is-medium has-background">
+  <img alt="Fill Murray" class="hero-background is-transparent" src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FbehfO7%2FbtrMIXJGBH0%2FH3kqxqGioNLJDl7tkPnqEk%2Fimg.jpg" />
+  <div class="hero-body">
+    <div class="container">
+    <h1 class="title">나의 개발일지</h1>
+    <h3 class="subtitle">TIL을 적어보자!</h3>
+    </div>
+  </div>
+</div>
+
+
 <div class="wrapper fadeInDown">
     <section class="section">
         <div class="container">

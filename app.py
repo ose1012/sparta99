@@ -14,8 +14,6 @@ app.config['UPLOAD_FOLDER'] = "./static/profile_pics"
 SECRET_KEY = 'SPARTA'
 
 client = MongoClient('mongodb+srv://test:sparta@cluster0.rfofzeu.mongodb.net/?retryWrites=true&w=majority')
-# client = MongoClient('mongodb://cluster0:test@localhost', 27017)
-# client = MongoClient('mongodb://15.165.75.67', 27017, username="cluster0", password="sparta")
 db = client.dbsparta_plus_week4
 
 
@@ -32,30 +30,6 @@ def login():
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
-# @app.route('/main')
-# def main():
-#     return render_template('main2.html')
-# @app.route("/main", methods=["POST"])
-# def web_mars_post():
-#     name_receive = request.form['name_give']
-#     title_receive = request.form['title_give']
-#     date_receive = request.form['date_give']
-#     content_receive = request.form['content_give']
-#     doc = {
-#         'name':name_receive,
-#         'title':title_receive,
-#         'date':date_receive,
-#         'content':content_receive,
-#     }
-#     db.main.insert_one(doc)
-#
-#     return jsonify({'msg': '주문 완료!'})
-#
-# @app.route("/main/show", methods=["GET"])
-# def web_mars_get():
-#     order_list = list(db.main.find({}, {'_id': False}))
-#     return jsonify({'orders': order_list})
-
 @app.route('/')
 def home():
     msg = request.args.get("msg")
@@ -67,10 +41,11 @@ def user(username):
     # 각 사용자의 프로필과 글을 모아볼 수 있는 공간
     token_receive = request.cookies.get('mytoken')
     try:
+        # _id = request.form['_id']
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         status = (username == payload["id"])  # 내 프로필이면 True, 다른 사람 프로필 페이지면 False
-
         user_info = db.users.find_one({"username": username}, {"_id": False})
+        # post_list = db.posts.find_one({'_id': ObjectId(_id)}, {"_id": False})
         return render_template('user.html', user_info=user_info, status=status)
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
@@ -192,18 +167,25 @@ def get_posts():
         return redirect(url_for("home"))
 
 
-# @app.route('/get_posts/delete', methods=['POST'])
-# def delete_post():
-#     id_receive = request.form.get('id_give')
-#     print(type(id_receive))
-#     db.posts.delete_one({'id': id_receive})
-#     return jsonify({'msg': '삭제 완료'})
+@app.route('/update_post', methods=['POST'])
+def update_post():
+    # token_receive = request.cookies.get('mytoken')
+    try:
+        # payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        _id = request.form['_id']
+        title_receive = request.form["title_give"]
+        comment_receive = request.form["comment_give"]
+        date_receive = request.form["date_give"]
+        new_doc = {
+            "title": title_receive,
+            "comment": comment_receive,
+            "date": date_receive
+        }
 
-# @app.route('/get_posts/delete', methods=['POST'])
-# def delete_post():
-#     id_receive = request.form.get("_id")
-#     db.posts.delete_one({'id': id_receive})
-#     return jsonify({'msg': '삭제 완료'})
+        db.posts.update_one({'_id': ObjectId(_id)}, {'$set': new_doc})
+        return jsonify({"result": "success", 'msg': '수정 완료'})
+    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("/main"))
 
 
 @app.route('/get_posts/delete', methods=['POST'])
@@ -236,82 +218,6 @@ def update_like():
         return jsonify({"result": "success", 'msg': 'updated', "count": count})
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
-
-
-@app.route('/bucket')
-def bucket():
-    return render_template('bucket.html')
-
-
-@app.route("/bucket", methods=["POST"])
-def bucket_post():
-    bucket_receive = request.form['bucket_give']
-    bucket_list = list(db.bucket.find({}, {'_id': False}))
-    count = len(bucket_list) + 1
-    doc = {
-        'num': count,
-        'bucket': bucket_receive,
-        'done': 0
-    }
-
-    db.bucket.insert_one(doc)
-    return jsonify({'msg': '등록 완료!'})
-
-
-@app.route("/bucket/done", methods=["POST"])
-def bucket_done():
-    num_receive = request.form['num_give']
-    db.bucket.update_one({'num': int(num_receive)}, {'$set': {'done': 1}})
-    return jsonify({'msg': '버킷 완료!'})
-
-
-@app.route("/bucket/cancel", methods=["POST"])
-def bucket_cancel():
-    num_receive = request.form['num_give']
-    db.bucket.update_one({'num': int(num_receive)}, {'$set': {'done': 0}})
-    return jsonify({'msg': '취소 완료!'})
-
-
-@app.route("/bucket/show", methods=["GET"])
-def bucket_get():
-    bucket_list = list(db.bucket.find({}, {'_id': False}))
-    return jsonify({'buckets': bucket_list})
-
-
-@app.route('/bucket/delete', methods=['POST'])
-def delete_bucket():
-    num_receive = request.form['num_give']
-    print(type(num_receive))
-    db.bucket.delete_one({'num': int(num_receive)})
-    return jsonify({'msg': '삭제 완료'})
-
-
-# @app.route("/main", methods=["POST"])
-# def web_mars_post():
-#     name_receive = request.form['name_give']
-#     # name1_receive = request.form['name1_give']
-#     title_receive = request.form['title_give']
-#     date_receive = request.form['date_give']
-#     content_receive = request.form['content_give']
-#     post_list = list(db.posts.find({}, {'_id': False}))
-#     count = len(post_list) + 1
-#     doc = {
-#         'id': count,
-#         'name': name_receive,
-#         # 'name1': name1_receive,
-#         'title': title_receive,
-#         'date': date_receive,
-#         'content': content_receive
-#     }
-#     db.mars.insert_one(doc)
-#
-#     return jsonify({'msg': '작성 완료 ✔'})
-
-
-# @app.route("/main/show", methods=["GET"])
-# def web_mars_get():
-#     order_list = list(db.mars.find({}, {'_id': False}))
-#     return jsonify({'orders': order_list})
 
 
 if __name__ == '__main__':
