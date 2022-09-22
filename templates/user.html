@@ -34,6 +34,10 @@
 
         }
 
+        body.has-navbar-fixed-top {
+            padding: 0px;
+        }
+
         .content {
             display: flex;
             justify-content: space-between;
@@ -130,10 +134,104 @@
                 }
             });
         }
+
+        function get_posts(username) {
+            if (username == undefined) {
+                username = ""
+            }
+            $("#post-box").empty()
+            $.ajax({
+                type: "GET",
+                url: `/get_posts?username_give=${username}`,
+                data: {},
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        let posts = response["posts"]
+                        for (let i = 0; i < posts.length; i++) {
+                            let post = posts[i]
+                            let time_post = new Date(post["date"])
+                            let time_before = time2str(time_post)
+                            let class_heart = post['heart_by_me'] ? "fa-heart" : "fa-heart-o"
+                            let count_heart = post['count_heart']
+                            let html_temp = `<div class="box" id="${post["_id"]}">
+                                        <article class="media">
+                                            <div class="media-left">
+                                                <a class="image is-64x64" href="/user/${post['username']}">
+                                                    <img class="is-rounded" src="/static/${post['profile_pic_real']}"
+                                                         alt="Image">
+                                                </a>
+                                            </div>
+                                            <div class="media-content">
+                                                <div class="content">
+                                                    <p>
+                                                        <strong>${post['profile_name']}</strong> <small>@${post['username']}</small> <small>${time_before}</small>
+                                                        <br>
+                                                        <strong style="font-size: 20px">${post['title']}</strong><br>
+                                                        ${post['comment']}
+                                                    </p>
+                                                    {% if status %}
+                                                    <div>
+                                                        <button onclick="delete_post('${post["_id"]}')" type="button" class="btn2"><i class="fa-solid fa-xmark"></i></i></button>
+                                                    </div>
+                                                    {% endif %}
+                                                </div>
+                                                <nav class="level is-mobile">
+                                                    <div class="level-left">
+                                                        <a class="level-item is-sparta" aria-label="heart" onclick="toggle_like('${post['_id']}', 'heart')">
+                                                            <span class="icon is-small"><i class="fa ${class_heart}" aria-hidden="true"></i></span>&nbsp;<span class="like-num">${num2str(count_heart)}</span>
+                                                        </a>
+                                                    </div>
+
+                                                </nav>
+                                            </div>
+                                        </article>
+                                    </div>`;
+                            $("#post-box").append(html_temp)
+                        }
+                    }
+                }
+            })
+        }
+
+        function delete_post(_id) {
+            console.log(_id)
+            if (confirm('정말로 삭제하시겠습니까?')) {
+                $.ajax({
+                    type: 'POST',
+                    url: '/get_posts/delete',
+                    data: {
+                        _id: _id,
+                    },
+                    success: function (response) {
+                        alert(response['msg']);
+                        window.location.reload()
+                    },
+                });
+            } else {
+                return;
+            }
+        }
     </script>
 
 </head>
 <a id="btn"></a>
+<div class="mytitle">
+    <div class="position-absolute top-0 start-0">
+        <header>
+            <a href="/main">
+                <img style="
+                border: 3px solid cadetblue;
+                border-radius: 50px;
+                -moz-border-radius: 50px;
+                -khtml-border-radius: 50px;
+                -webkit-border-radius: 50px;
+                "
+                     src="https://img1.daumcdn.net/thumb/R1280x0/?scode=mtistory2&fname=https%3A%2F%2Fblog.kakaocdn.net%2Fdn%2FcB0zx3%2FbtrMIswrlYf%2FmZ5dA9VKuIRwVoK0iQVDp1%2Fimg.png"
+                     width="200">
+            </a>
+        </header>
+    </div>
+</div>
 <body class="has-navbar-fixed-top">
 <section class="hero">
     <div class="hero-body" style="padding-bottom:1rem;margin:auto;min-width: 400px">
@@ -306,12 +404,10 @@
                             <br>
                             글을 적는 칸
                         </p>
-                        {% if status %}
-                            <div>
-                                <button onclick="delete_post()" type="button" class="btn2"><i
-                                        class="fa-solid fa-xmark"></i></button>
-                            </div>
-                        {% endif %}
+                        <div>
+                            <button onclick="delete_post()" type="button" class="btn2"><i
+                                    class="fa-solid fa-xmark"></i></button>
+                        </div>
                     </div>
                     <nav class="level is-mobile">
                         <div class="level-left">

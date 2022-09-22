@@ -9,6 +9,10 @@ html {
     background-size: cover;
 }
 
+header {
+    padding: 20px;
+}
+
 .section {
     padding: 1rem 1.5rem;
     max-width: 750px;

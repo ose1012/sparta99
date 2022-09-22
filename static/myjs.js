@@ -120,9 +120,6 @@ function get_posts(username) {
                                                         <strong style="font-size: 20px">${post['title']}</strong><br>
                                                         ${post['comment']}
                                                     </p>
-                                                    <div>
-                                                        <button onclick="delete_post('${post["_id"]}')" type="button" class="btn2"><i class="fa-solid fa-xmark"></i></i></button>
-                                                    </div>
                                                 </div>
                                                 <nav class="level is-mobile">
                                                     <div class="level-left">
